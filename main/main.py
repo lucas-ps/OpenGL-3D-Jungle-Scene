@@ -23,6 +23,9 @@ class GraphicsEngine:
         self.time = 0
         self.camera = Camera(self)
 
+        # Ensuring fragments show in the correct order of depth and culls faces that don't need to be rendered.
+        self.ctx.enable(flags=mgl.DEPTH_TEST | mgl.CULL_FACE)
+
         # Load the scene
         self.scene = Cube(self)
 

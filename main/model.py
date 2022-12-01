@@ -1,5 +1,6 @@
 import numpy as np
 import glm
+import pygame as pg
 
 
 class Cube:
@@ -14,19 +15,37 @@ class Cube:
         self.shader_program = self.get_shader_program('default')
         self.vao = self.get_vao()
         self.m_model = self.get_model_matrix()
+        self.texture = self.get_texture(path='../textures/wooden_crate.png')
         self.on_init()
 
     def on_init(self):
         """
-        Runs when object is created, passes projection and view matrix from camera object to shader.
-        :return:
+        Runs when object is created, passes texture and projection, view and model matrices.
         """
+        self.shader_program['u_texture_0'] = 0
+        self.texture.use()
         self.shader_program['m_proj'].write(self.app.camera.m_proj)
         self.shader_program['m_view'].write(self.app.camera.m_view)
         self.shader_program['m_model'].write(self.m_model)
 
+    def get_texture(self, path):
+        """
+        Loads the texture image from a given path.
+        :param path: path to the image.
+        :return: ctx texture object.
+        """
+        texture = pg.image.load(path).convert()
+        # Makes texture compatible with pygame's axis system
+        texture = pg.transform.flip(texture, flip_x=False, flip_y=True)
+        texture = self.ctx.texture(size=texture.get_size(), components=3, data=pg.image.tostring(texture, 'RGB'))
+        return texture
+
+
     def update(self):
-        model_matrix = glm.rotate(self.m_model, self.app.time, glm.vec3(0, 1, 0))
+        """
+        Updates the cube everytime it is called by rotating it.
+        """
+        model_matrix = glm.rotate(self.m_model, self.app.time * 0.5, glm.vec3(0, 1, 0))
         self.shader_program['m_model'].write(model_matrix)
 
     def get_model_matrix(self):
@@ -55,7 +74,7 @@ class Cube:
         format and 'in_position' is an input attribute that defines how vertexes are stored in the VBO.
         :return: The created VAO
         """
-        vao = self.ctx.vertex_array(self.shader_program, [(self.vbo, '3f', 'in_position')])
+        vao = self.ctx.vertex_array(self.shader_program, [(self.vbo, '2f 3f', 'in_texcoord_0', 'in_position')])
         return vao
 
     def get_vertex_data(self):
@@ -71,6 +90,17 @@ class Cube:
                    (3, 7, 4), (3, 2, 7),
                    (0, 6, 1), (0, 5, 6)]
         vertex_data = self.get_data(vertices, indices)
+
+        texture_coord = [(0, 0), (1, 0), (1, 1), (0, 1)]
+        texture_coord_indices = [(0, 2, 3), (0, 1, 2),
+                                 (0, 2, 3), (0, 1, 2),
+                                 (0, 1, 2), (2, 3, 0),
+                                 (2, 3, 0), (2, 0, 1),
+                                 (0, 2, 3), (0, 1, 2),
+                                 (3, 1, 2), (3, 0, 1)]
+        texture_coord_data = self.get_data(texture_coord, texture_coord_indices)
+        vertex_data = np.hstack([texture_coord_data, vertex_data])
+
         return vertex_data
 
     @staticmethod
