@@ -19,9 +19,16 @@ class GraphicsEngine:
         # Creating opengl content - DOUBLEBUF = 2 complete colour buffers for drawing (used for optimisation)
         pg.display.set_mode(self.WIN_SIZE, flags=pg.OPENGL | pg.DOUBLEBUF)
         self.ctx = mgl.create_context()
+        self.camera = Camera(self)
+
+        # Mouse settings
+        pg.event.set_grab(True)
+        pg.mouse.set_visible(False)
+
+        # Implementing time
         self.clock = pg.time.Clock()
         self.time = 0
-        self.camera = Camera(self)
+        self.delta_time = 0
 
         # Ensuring fragments show in the correct order of depth and culls faces that don't need to be rendered.
         self.ctx.enable(flags=mgl.DEPTH_TEST | mgl.CULL_FACE)
@@ -57,9 +64,10 @@ class GraphicsEngine:
         while True:
             self.get_time()
             self.check_events()
+            self.camera.update()
             self.render()
             # Setting frame rate to 60Hz
-            self.clock.tick(60)
+            self.delta_time = self.clock.tick(60)
 
 if __name__ == '__main__':
     app = GraphicsEngine()
