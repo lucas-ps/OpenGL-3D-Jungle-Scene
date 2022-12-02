@@ -44,6 +44,13 @@ vec3 getLight(vec3 colour) {
 // Reading and rendering fragments.
 void main() {
     vec3 colour = texture(u_texture_0, uv_0).rgb;
+
+    // Gamma correction
+    colour = pow(colour, vec3(2.2));
+
     colour = getLight(colour);
+
+    colour = pow(colour, 1 / vec3(2.2));
+
     fragColor = vec4(colour, 1.0);
 }

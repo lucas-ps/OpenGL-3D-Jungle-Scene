@@ -1,4 +1,5 @@
 import pygame as pg
+import moderngl as mgl
 
 
 class Texture:
@@ -17,9 +18,18 @@ class Texture:
         :return: ctx texture object.
         """
         texture = pg.image.load(path).convert()
+
         # Makes texture compatible with pygame's axis system
         texture = pg.transform.flip(texture, flip_x=False, flip_y=True)
         texture = self.ctx.texture(size=texture.get_size(), components=3, data=pg.image.tostring(texture, 'RGB'))
+
+        # Generate MIP maps for optimisation and antialiasing.
+        texture.filter = (mgl.LINEAR_MIPMAP_LINEAR, mgl.LINEAR)
+        texture.build_mipmaps()
+
+        # Anisotropic filtering for antialiasing and improving sharpness lost by MIP maps.
+        texture.anisotropy = 32
+
         return texture
 
     def destroy(self):

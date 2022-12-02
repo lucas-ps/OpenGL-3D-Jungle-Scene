@@ -1,4 +1,5 @@
 import numpy as np
+import pywavefront
 
 
 class VBO:
@@ -103,3 +104,5 @@ class CubeVBO(BaseVBO):
         vertex_data = np.hstack([texture_coord_data, vertex_data])
 
         return vertex_data
+
+
