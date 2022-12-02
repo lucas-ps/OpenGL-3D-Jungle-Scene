@@ -12,10 +12,14 @@ class VAO:
         self.ctx = ctx
         self.vbo = VBO(ctx)
         self.program = Shaders(ctx)
-        self.vaos = {}
-        self.vaos['cube'] = self.get_vao(
-            program=self.program.programs['default'],
-            vbo=self.vbo.vbos['cube'])
+        self.vaos = {
+            'cube': self.get_vao(
+                program=self.program.programs['default'],
+                vbo=self.vbo.vbos['cube']),
+            'cat': self.get_vao(
+                program=self.program.programs['default'],
+                vbo=self.vbo.vbos['cat'])
+        }
 
     def get_vao(self, program, vbo):
         """

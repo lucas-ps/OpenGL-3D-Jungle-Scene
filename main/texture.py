@@ -9,7 +9,8 @@ class Texture:
 
     def __init__(self, ctx):
         self.ctx = ctx
-        self.textures = {0: self.get_texture(path='../textures/wooden_crate.png')}
+        self.textures = {0: self.get_texture(path='../textures/wooden_crate.png'),
+                         1: self.get_texture(path='../textures/cat.jpg')}
 
     def get_texture(self, path):
         """

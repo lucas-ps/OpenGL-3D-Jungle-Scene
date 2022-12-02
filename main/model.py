@@ -77,3 +77,37 @@ class Cube(BaseModel):
         self.shader['m_proj'].write(self.app.camera.m_proj)
         self.shader['m_view'].write(self.app.camera.m_view)
         self.shader['m_model'].write(self.model_matrix)
+
+
+class Cat(BaseModel):
+    def __init__(self, app, vao_name='cat', texture_id=1, position=(0, 0, 0), rotation=(-90, 0, 0), scale=(1, 1, 1)):
+        super().__init__(app, vao_name, texture_id, position, rotation, scale)
+        self.on_init()
+
+    def update(self):
+        """
+        Updates the cube everytime it is called by rotating it.
+        """
+        self.texture.use()
+        self.shader['m_model'].write(self.model_matrix)
+        self.shader['m_view'].write(self.camera.m_view)
+        self.shader['camPos'].write(self.camera.position)
+    def on_init(self):
+        """
+        Runs when object is created, passes light intensity, texture and projection, view and model matrices.
+        """
+        # Lighting
+        self.shader['light.position'].write(self.app.light.position)
+        self.shader['light.Ia'].write(self.app.light.intensity_ambient)
+        self.shader['light.Id'].write(self.app.light.intensity_diffuse)
+        self.shader['light.Is'].write(self.app.light.intensity_specular)
+
+        # Textures
+        self.texture = self.app.link.texture.textures[self.texture_id]
+        self.shader['u_texture_0'] = 0
+        self.texture.use()
+
+        # Matrices
+        self.shader['m_proj'].write(self.app.camera.m_proj)
+        self.shader['m_view'].write(self.app.camera.m_view)
+        self.shader['m_model'].write(self.model_matrix)
