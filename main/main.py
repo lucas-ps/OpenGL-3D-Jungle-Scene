@@ -3,6 +3,7 @@ import moderngl as mgl
 import sys
 from model import *
 from camera import Camera
+from light import Light
 
 
 class GraphicsEngine:
@@ -30,12 +31,14 @@ class GraphicsEngine:
         self.time = 0
         self.delta_time = 0
 
+        # Load phong lighting class
+        self.light = Light()
+
         # Ensuring fragments show in the correct order of depth and culls faces that don't need to be rendered.
         self.ctx.enable(flags=mgl.DEPTH_TEST | mgl.CULL_FACE)
 
         # Load the scene
         self.scene = Cube(self)
-
 
     def check_events(self):
         for event in pg.event.get():

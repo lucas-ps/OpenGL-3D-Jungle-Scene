@@ -20,10 +20,20 @@ class Cube:
 
     def on_init(self):
         """
-        Runs when object is created, passes texture and projection, view and model matrices.
+        Runs when object is created, passes light intensity, texture and projection, view and model matrices.
         """
+        # Lighting
+        self.shader_program['light.position'].write(self.app.light.position)
+        self.shader_program['light.Ia'].write(self.app.light.intensity_ambient)
+        self.shader_program['light.Id'].write(self.app.light.intensity_diffuse)
+        self.shader_program['light.Is'].write(self.app.light.intensity_specular)
+
+
+        # Textures
         self.shader_program['u_texture_0'] = 0
         self.texture.use()
+
+        # Matrices
         self.shader_program['m_proj'].write(self.app.camera.m_proj)
         self.shader_program['m_view'].write(self.app.camera.m_view)
         self.shader_program['m_model'].write(self.m_model)
@@ -40,7 +50,6 @@ class Cube:
         texture = self.ctx.texture(size=texture.get_size(), components=3, data=pg.image.tostring(texture, 'RGB'))
         return texture
 
-
     def update(self):
         """
         Updates the cube everytime it is called by rotating it.
@@ -48,6 +57,7 @@ class Cube:
         model_matrix = glm.rotate(self.m_model, self.app.time * 0.5, glm.vec3(0, 1, 0))
         self.shader_program['m_model'].write(model_matrix)
         self.shader_program['m_view'].write(self.app.camera.m_view)
+        self.shader_program['camPos'].write(self.app.camera.position)
 
     def get_model_matrix(self):
         model_matrix = glm.mat4()
@@ -75,7 +85,8 @@ class Cube:
         format and 'in_position' is an input attribute that defines how vertexes are stored in the VBO.
         :return: The created VAO
         """
-        vao = self.ctx.vertex_array(self.shader_program, [(self.vbo, '2f 3f', 'in_texcoord_0', 'in_position')])
+        vao = self.ctx.vertex_array(self.shader_program, [(self.vbo, '2f 3f 3f', 'in_texcoord_0', 'in_normal',
+                                                           'in_position')])
         return vao
 
     def get_vertex_data(self):
@@ -100,6 +111,16 @@ class Cube:
                                  (0, 2, 3), (0, 1, 2),
                                  (3, 1, 2), (3, 0, 1)]
         texture_coord_data = self.get_data(texture_coord, texture_coord_indices)
+
+        normals = [(0, 0, 1) * 6,
+                   (1, 0, 0) * 6,
+                   (0, 0, -1) * 6,
+                   (-1, 0, 0) * 6,
+                   (0, 1, 0) * 6,
+                   (0, -1, 0) * 6]
+        normals = np.array(normals, dtype='f4').reshape(36, 3)
+
+        vertex_data = np.hstack([normals, vertex_data])
         vertex_data = np.hstack([texture_coord_data, vertex_data])
 
         return vertex_data
