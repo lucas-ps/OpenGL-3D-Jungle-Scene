@@ -1,5 +1,7 @@
 import moderngl as mgl
 import sys
+
+from scene import Scene
 from model import *
 from camera import Camera
 from light import Light
@@ -39,12 +41,12 @@ class GraphicsEngine:
         self.ctx.enable(flags=mgl.DEPTH_TEST | mgl.CULL_FACE)
 
         # Load the scene
-        self.scene = Cube(self)
+        self.scene = Scene(self)
 
     def check_events(self):
         for event in pg.event.get():
             if event.type == pg.QUIT or (event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE):
-                self.mesh.destroy()
+                self.link.destroy()
                 pg.quit()
                 sys.exit()
 

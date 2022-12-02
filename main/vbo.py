@@ -42,7 +42,7 @@ class BaseVBO:
         """
         Acts as a garbage collector for VBOs
         """
-        self.VBO.release()
+        self.vbo.release()
 
 
 class CubeVBO(BaseVBO):

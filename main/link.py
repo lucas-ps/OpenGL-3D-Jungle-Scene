@@ -17,5 +17,5 @@ class Link:
         Calls destroy functions for VAOs, VBOs, Shaders and textures.
         """
         self.vao.destroy()
-        self.texture()
+        self.texture.destroy()
 

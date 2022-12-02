@@ -7,8 +7,12 @@ class BaseModel:
     """
     A base model for object models
     """
-    def __init__(self, app, vao_name, texture_id):
+    def __init__(self, app, vao_name, texture_id, position=(0, 0, 0), rotation=(0, 0, 0), scale=(1, 1, 1)):
         self.app = app
+        self.pos = position
+        # Converts euler angles into openGL compatible format
+        self.rot = glm.vec3([glm.radians(a) for a in rotation])
+        self.scale = scale
         self.model_matrix = self.get_model_matrix()
         self.texture_id = texture_id
         self.vao = app.link.vao.vaos[vao_name]
@@ -19,6 +23,18 @@ class BaseModel:
 
     def get_model_matrix(self):
         model_matrix = glm.mat4()
+
+        # Translate object to position
+        model_matrix = glm.translate(model_matrix, self.pos)
+
+        # Rotate object around XYZ axis as specified in parameters
+        model_matrix = glm.rotate(model_matrix, self.rot.x, glm.vec3(1, 0, 0))
+        model_matrix = glm.rotate(model_matrix, self.rot.y, glm.vec3(0, 1, 0))
+        model_matrix = glm.rotate(model_matrix, self.rot.z, glm.vec3(0, 0, 1))
+
+        # Scale objects
+        model_matrix = glm.scale(model_matrix, self.scale)
+
         return model_matrix
 
     def render(self):
@@ -30,8 +46,8 @@ class BaseModel:
 
 
 class Cube(BaseModel):
-    def __init__(self, app, vao_name='cube', texture_id=0):
-        super().__init__(app, vao_name, texture_id)
+    def __init__(self, app, vao_name='cube', texture_id=0, position=(0, 0, 0), rotation=(0, 0, 0), scale=(1, 1, 1)):
+        super().__init__(app, vao_name, texture_id, position, rotation, scale)
         self.on_init()
 
     def update(self):
