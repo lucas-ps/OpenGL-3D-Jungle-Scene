@@ -1,9 +1,9 @@
-import pygame as pg
 import moderngl as mgl
 import sys
 from model import *
 from camera import Camera
 from light import Light
+from link import Link
 
 
 class GraphicsEngine:
@@ -21,6 +21,7 @@ class GraphicsEngine:
         pg.display.set_mode(self.WIN_SIZE, flags=pg.OPENGL | pg.DOUBLEBUF)
         self.ctx = mgl.create_context()
         self.camera = Camera(self)
+        self.link = Link(self)
 
         # Mouse settings
         pg.event.set_grab(True)
@@ -43,7 +44,7 @@ class GraphicsEngine:
     def check_events(self):
         for event in pg.event.get():
             if event.type == pg.QUIT or (event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE):
-                self.scene.destroy()
+                self.mesh.destroy()
                 pg.quit()
                 sys.exit()
 
