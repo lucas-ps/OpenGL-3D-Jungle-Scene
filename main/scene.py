@@ -10,6 +10,7 @@ class Scene:
         self.app = app
         self.objects = []
         self.load()
+        self.skybox = SkyBox(app)
 
     def add_object(self, obj):
         """
@@ -27,13 +28,13 @@ class Scene:
         self.add_object(Cube(self.app, position=(-2.5, 0, 0), rotation=(45, 0, 0), scale=(1, 2, 1)))
         self.add_object(Cube(self.app, position=(2.5, 0, 0), rotation=(0, 0, 45), scale=(1, 1, 2)))"""
 
-        # Create a 30x30 grid of boxes spaced apart at width y
+        """# Create a 30x30 grid of boxes spaced apart at width y
         n, y = 30, 3
         for x in range(-n, n, y):
             for z in range(-n, n, y):
                 self.add_object(Cube(self.app, position=(x, -y, z)))
 
-        self.add_object(Cat(self.app, position=(0, -2, -10)))
+        self.add_object(Cat(self.app, position=(0, -2, -10)))"""
 
     def render(self):
         """
@@ -41,3 +42,5 @@ class Scene:
         """
         for obj in self.objects:
             obj.render()
+        self.skybox.render()
+

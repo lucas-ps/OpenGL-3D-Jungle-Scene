@@ -10,7 +10,28 @@ class Texture:
     def __init__(self, ctx):
         self.ctx = ctx
         self.textures = {0: self.get_texture(path='../textures/wooden_crate.png'),
-                         1: self.get_texture(path='../textures/cat.jpg')}
+                         1: self.get_texture(path='../textures/cat.jpg'),
+                         'skybox': self.get_texture_cube('../textures/skybox1/', 'jpg')}
+
+    def get_texture_cube(self, path, ext='png'):
+        """
+        Used for getting cube textures (ie. skybox).
+        :param path: Path to the textures.
+        :param ext: The file extension eg. png.
+        :return: The fetched and processed cube texture.
+        """
+        faces = ['right', 'left', 'top', 'bottom', 'front', 'back']
+        textures = []
+        for face in faces:
+            textures.append(pg.image.load(path + f'{face}.{ext}').convert())
+        size = textures[0].get_size()
+        texture_cube = self.ctx.texture_cube(size=size, components=3, data=None)
+
+        for i in range(6):
+            texture_data = pg.image.tostring(textures[i], 'RGB')
+            texture_cube.write(face=i, data=texture_data)
+
+        return texture_cube
 
     def get_texture(self, path):
         """

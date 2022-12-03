@@ -5,7 +5,8 @@ class Shaders:
         :param ctx: An interactive 2D vector graphics protocol, previously created for the in GraphicsEngine
         """
         self.ctx = ctx
-        self.programs = {'default': self.get_program('default')}
+        self.programs = {'default': self.get_program('default'),
+                         'skybox': self.get_program('skybox')}
 
     def get_program(self, shader_name):
         """

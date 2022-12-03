@@ -7,6 +7,7 @@ class BaseModel:
     """
     A base model for object models
     """
+
     def __init__(self, app, vao_name, texture_id, position=(0, 0, 0), rotation=(0, 0, 0), scale=(1, 1, 1)):
         self.app = app
         self.pos = position
@@ -45,69 +46,76 @@ class BaseModel:
         self.vao.render()
 
 
-class Cube(BaseModel):
+class ExtendedBaseModel(BaseModel):
+    """
+    An extended base model class that contains methods for objects.
+    """
+    def __init__(self, app, vao_name, texture_id, position, rotation, scale):
+        super().__init__(app, vao_name, texture_id, position, rotation, scale)
+        self.on_init()
+
+    def update(self):
+        """
+        Updates the cube everytime it is called by rotating it.
+        """
+        self.texture.use()
+        self.shader['m_model'].write(self.model_matrix)
+        self.shader['m_view'].write(self.camera.m_view)
+        self.shader['camPos'].write(self.camera.position)
+
+    def on_init(self):
+        """
+        Runs when object is created, passes light intensity, texture and projection, view and model matrices.
+        """
+        # Lighting
+        self.shader['light.position'].write(self.app.light.position)
+        self.shader['light.Ia'].write(self.app.light.intensity_ambient)
+        self.shader['light.Id'].write(self.app.light.intensity_diffuse)
+        self.shader['light.Is'].write(self.app.light.intensity_specular)
+
+        # Textures
+        self.texture = self.app.link.texture.textures[self.texture_id]
+        self.shader['u_texture_0'] = 0
+        self.texture.use()
+
+        # Matrices
+        self.shader['m_proj'].write(self.app.camera.m_proj)
+        self.shader['m_view'].write(self.app.camera.m_view)
+        self.shader['m_model'].write(self.model_matrix)
+
+
+class Cube(ExtendedBaseModel):
     def __init__(self, app, vao_name='cube', texture_id=0, position=(0, 0, 0), rotation=(0, 0, 0), scale=(1, 1, 1)):
         super().__init__(app, vao_name, texture_id, position, rotation, scale)
-        self.on_init()
-
-    def update(self):
-        """
-        Updates the cube everytime it is called by rotating it.
-        """
-        self.texture.use()
-        self.shader['m_model'].write(self.model_matrix)
-        self.shader['m_view'].write(self.camera.m_view)
-        self.shader['camPos'].write(self.camera.position)
-    def on_init(self):
-        """
-        Runs when object is created, passes light intensity, texture and projection, view and model matrices.
-        """
-        # Lighting
-        self.shader['light.position'].write(self.app.light.position)
-        self.shader['light.Ia'].write(self.app.light.intensity_ambient)
-        self.shader['light.Id'].write(self.app.light.intensity_diffuse)
-        self.shader['light.Is'].write(self.app.light.intensity_specular)
-
-        # Textures
-        self.texture = self.app.link.texture.textures[self.texture_id]
-        self.shader['u_texture_0'] = 0
-        self.texture.use()
-
-        # Matrices
-        self.shader['m_proj'].write(self.app.camera.m_proj)
-        self.shader['m_view'].write(self.app.camera.m_view)
-        self.shader['m_model'].write(self.model_matrix)
 
 
-class Cat(BaseModel):
+class Cat(ExtendedBaseModel):
     def __init__(self, app, vao_name='cat', texture_id=1, position=(0, 0, 0), rotation=(-90, 0, 0), scale=(1, 1, 1)):
+        super().__init__(app, vao_name, texture_id, position, rotation, scale)
+
+
+class SkyBox(BaseModel):
+    def __init__(self, app, vao_name='skybox', texture_id='skybox', position=(0, 0, 0), rotation=(0, 0, 0),
+                 scale=(1, 1, 1)):
         super().__init__(app, vao_name, texture_id, position, rotation, scale)
         self.on_init()
 
     def update(self):
         """
-        Updates the cube everytime it is called by rotating it.
+        Updates the skybox when camera moves
         """
-        self.texture.use()
-        self.shader['m_model'].write(self.model_matrix)
-        self.shader['m_view'].write(self.camera.m_view)
-        self.shader['camPos'].write(self.camera.position)
+        self.shader['m_view'].write(glm.mat4(glm.mat3(self.app.camera.m_view)))
+
     def on_init(self):
         """
-        Runs when object is created, passes light intensity, texture and projection, view and model matrices.
+        Runs when skybox is created, passes light intensity, texture and projection, view and model matrices.
         """
-        # Lighting
-        self.shader['light.position'].write(self.app.light.position)
-        self.shader['light.Ia'].write(self.app.light.intensity_ambient)
-        self.shader['light.Id'].write(self.app.light.intensity_diffuse)
-        self.shader['light.Is'].write(self.app.light.intensity_specular)
-
         # Textures
         self.texture = self.app.link.texture.textures[self.texture_id]
-        self.shader['u_texture_0'] = 0
-        self.texture.use()
+        self.shader['u_texture_skybox'] = 0
+        self.texture.use(location=0)
 
         # Matrices
         self.shader['m_proj'].write(self.app.camera.m_proj)
-        self.shader['m_view'].write(self.app.camera.m_view)
-        self.shader['m_model'].write(self.model_matrix)
+        self.shader['m_view'].write(glm.mat4(glm.mat3(self.app.camera.m_view)))
+

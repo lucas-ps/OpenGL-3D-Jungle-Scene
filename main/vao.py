@@ -18,7 +18,10 @@ class VAO:
                 vbo=self.vbo.vbos['cube']),
             'cat': self.get_vao(
                 program=self.program.programs['default'],
-                vbo=self.vbo.vbos['cat'])
+                vbo=self.vbo.vbos['cat']),
+            'skybox': self.get_vao(
+                program=self.program.programs['skybox'],
+                vbo=self.vbo.vbos['skybox'])
         }
 
     def get_vao(self, program, vbo):

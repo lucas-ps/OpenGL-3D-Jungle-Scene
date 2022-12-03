@@ -8,7 +8,7 @@ class VBO:
     """
 
     def __init__(self, ctx):
-        self.vbos = {'cube': CubeVBO(ctx), 'cat': CatVBO(ctx)}
+        self.vbos = {'cube': CubeVBO(ctx), 'cat': CatVBO(ctx) , 'skybox': SkyBoxVBO(ctx)}
 
     def destroy(self):
         """
@@ -126,3 +126,42 @@ class CatVBO(BaseVBO):
         vertex_data = np.array(vertex_data, dtype='f4')
         return vertex_data
 
+class SkyBoxVBO(BaseVBO):
+    """
+    Extends BaseVBO for use to render basic the skybox
+    :param ctx: An interactive 2D vector graphics protocol, previously created for the in GraphicsEngine
+    """
+    def __init__(self, ctx):
+        super().__init__(ctx)
+        self.format = '3f'
+        self.attribs = ['in_position']
+
+    @staticmethod
+    def get_data(vertices, indices):
+        """
+        Static method to create an array for generating vertex data above.
+        :param vertices: The array of vertices.
+        :param indices: The array of indices.
+        :return: A numpy array  of vertices and their indices.
+        """
+        data = [vertices[ind]
+                for triangle in indices
+                for ind in triangle]
+        return np.array(data, dtype='f4')
+
+    def get_vertex_data(self):
+        """
+        Sets vertex co-ordinates for a triangle.
+        :return: Vertex data for a triangle.
+        """
+        vertices = [(-1, -1, 1), (1, -1, 1), (1, 1, 1), (-1, 1, 1), (-1, 1, -1), (-1, -1, -1), (1, -1, -1), (1, 1, -1)]
+        indices = [(0, 2, 3), (0, 1, 2),
+                   (1, 7, 2), (1, 6, 7),
+                   (6, 5, 4), (4, 7, 6),
+                   (3, 4, 5), (3, 5, 0),
+                   (3, 7, 4), (3, 2, 7),
+                   (0, 6, 1), (0, 5, 6)]
+        vertex_data = self.get_data(vertices, indices)
+        vertex_data = np.flip(vertex_data, 1).copy(order='C')
+
+        return vertex_data
