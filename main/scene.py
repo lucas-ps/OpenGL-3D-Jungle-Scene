@@ -28,19 +28,15 @@ class Scene:
         self.add_object(Cube(self.app, position=(-2.5, 0, 0), rotation=(45, 0, 0), scale=(1, 2, 1)))
         self.add_object(Cube(self.app, position=(2.5, 0, 0), rotation=(0, 0, 45), scale=(1, 1, 2)))"""
 
-        """# Create a 30x30 grid of boxes spaced apart at width y
-        n, y = 30, 3
+        # Create a 30x30 grid of boxes spaced apart at width y
+        n, y = 30, 2
         for x in range(-n, n, y):
             for z in range(-n, n, y):
                 self.add_object(Cube(self.app, position=(x, -y, z)))
 
-        self.add_object(Cat(self.app, position=(0, -2, -10)))"""
-
-    def render(self):
-        """
-        Renders each object in the object list
-        """
-        for obj in self.objects:
-            obj.render()
-        self.skybox.render()
-
+        self.add_object(Cat(self.app, position=(0, -2, -10)))
+        self.moving_cube = MovingCube(self.app, position=(0, 6, 8), scale=(3, 3, 3), texture_id=1)
+        self.add_object(self.moving_cube)
+    def update(self):
+        # TODO: remove, used for testing
+        self.moving_cube.rot.xyz = self.app.time

@@ -1,6 +1,7 @@
 import moderngl as mgl
 import sys
 
+from renderer import Renderer
 from scene import Scene
 from model import *
 from camera import Camera
@@ -40,13 +41,15 @@ class GraphicsEngine:
         # Ensuring fragments show in the correct order of depth and culls faces that don't need to be rendered.
         self.ctx.enable(flags=mgl.DEPTH_TEST | mgl.CULL_FACE)
 
-        # Load the scene
+        # Load and render the scene
         self.scene = Scene(self)
+        self.scene_renderer = Renderer(self)
 
     def check_events(self):
         for event in pg.event.get():
             if event.type == pg.QUIT or (event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE):
                 self.link.destroy()
+                self.scene_renderer.destroy()
                 pg.quit()
                 sys.exit()
 
@@ -55,7 +58,7 @@ class GraphicsEngine:
         self.ctx.clear(color=(0.08, 0.16, 0.18))
 
         # Render scene
-        self.scene.render()
+        self.scene_renderer.render()
 
         # Swap buffers
         pg.display.flip()

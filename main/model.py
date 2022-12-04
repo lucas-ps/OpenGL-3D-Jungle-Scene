@@ -16,6 +16,7 @@ class BaseModel:
         self.scale = scale
         self.model_matrix = self.get_model_matrix()
         self.texture_id = texture_id
+        self.vao_name = vao_name
         self.vao = app.link.vao.vaos[vao_name]
         self.shader = self.vao.program
         self.camera = self.app.camera
@@ -50,6 +51,7 @@ class ExtendedBaseModel(BaseModel):
     """
     An extended base model class that contains methods for objects.
     """
+
     def __init__(self, app, vao_name, texture_id, position, rotation, scale):
         super().__init__(app, vao_name, texture_id, position, rotation, scale)
         self.on_init()
@@ -58,15 +60,42 @@ class ExtendedBaseModel(BaseModel):
         """
         Updates the cube everytime it is called by rotating it.
         """
-        self.texture.use()
+        self.texture.use(location=0)
         self.shader['m_model'].write(self.model_matrix)
-        self.shader['m_view'].write(self.camera.m_view)
+        self.shader['m_view'].write(self.camera.view_matrix)
         self.shader['camPos'].write(self.camera.position)
+
+    def update_shadow(self):
+        """
+        Updates shadows with model movements.
+        """
+        self.shadow_shader['m_model'].write(self.model_matrix)
+
+    def render_shadow(self):
+        """
+        Completes shadow render.
+        """
+        self.update_shadow()
+        self.shadow_vao.render()
 
     def on_init(self):
         """
-        Runs when object is created, passes light intensity, texture and projection, view and model matrices.
+        Runs when object is created, passes shadow, light intensity, texture, projection, view and model matrices.
         """
+        self.shader['m_view_light'].write(self.app.light.view_matrix_light)
+
+        # Depth texture
+        self.depth_texture = self.app.link.texture.textures['depth_texture']
+        self.shader['shadowMap'] = 1
+        self.depth_texture.use(location=1)
+
+        # Shadows
+        self.shadow_vao = self.app.link.vao.vaos[f"shadow_{self.vao_name}"]
+        self.shadow_shader = self.shadow_vao.program
+        self.shadow_shader['m_proj'].write(self.app.camera.projection_matrix)
+        self.shadow_shader['m_view_light'].write(self.app.light.view_matrix_light)
+        self.shadow_shader['m_model'].write(self.model_matrix)
+
         # Lighting
         self.shader['light.position'].write(self.app.light.position)
         self.shader['light.Ia'].write(self.app.light.intensity_ambient)
@@ -76,11 +105,11 @@ class ExtendedBaseModel(BaseModel):
         # Textures
         self.texture = self.app.link.texture.textures[self.texture_id]
         self.shader['u_texture_0'] = 0
-        self.texture.use()
+        self.texture.use(location=0)
 
         # Matrices
-        self.shader['m_proj'].write(self.app.camera.m_proj)
-        self.shader['m_view'].write(self.app.camera.m_view)
+        self.shader['m_proj'].write(self.app.camera.projection_matrix)
+        self.shader['m_view'].write(self.app.camera.view_matrix)
         self.shader['m_model'].write(self.model_matrix)
 
 
@@ -104,7 +133,7 @@ class SkyBox(BaseModel):
         """
         Updates the skybox when camera moves
         """
-        self.shader['m_view'].write(glm.mat4(glm.mat3(self.app.camera.m_view)))
+        self.shader['m_view'].write(glm.mat4(glm.mat3(self.app.camera.view_matrix)))
 
     def on_init(self):
         """
@@ -116,6 +145,14 @@ class SkyBox(BaseModel):
         self.texture.use(location=0)
 
         # Matrices
-        self.shader['m_proj'].write(self.app.camera.m_proj)
-        self.shader['m_view'].write(glm.mat4(glm.mat3(self.app.camera.m_view)))
+        self.shader['m_proj'].write(self.app.camera.projection_matrix)
+        self.shader['m_view'].write(glm.mat4(glm.mat3(self.app.camera.view_matrix)))
 
+
+class MovingCube(Cube):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    def update(self):
+        self.model_matrix = self.get_model_matrix()
+        super().update()

@@ -5,13 +5,15 @@ class Shaders:
         :param ctx: An interactive 2D vector graphics protocol, previously created for the in GraphicsEngine
         """
         self.ctx = ctx
-        self.programs = {'default': self.get_program('default'),
-                         'skybox': self.get_program('skybox')}
+        self.programs = {'default': self.get_shader('default'),
+                         'skybox': self.get_shader('skybox'),
+                         'shadow': self.get_shader('shadow_map')}
 
-    def get_program(self, shader_name):
+    def get_shader(self, shader_name):
         """
-        Gets program .vert and .frag file and produces a
-        :param shader_name: The name of the program file.
+        Gets the specified GLSL shader shaders.
+        :param shader_name: The name of the shaders file.
+        :return: The processed shaders.
         """
         with open(f'../shaders/{shader_name}.vert') as file:
             vertex_shader = file.read()

@@ -20,8 +20,8 @@ class Camera:
         self.forward = glm.vec3(0, 0, -1)
         self.yaw = yaw
         self.pitch = pitch
-        self.m_view = self.get_view_matrix()
-        self.m_proj = self.get_projection_matrix()
+        self.view_matrix = self.get_view_matrix()
+        self.projection_matrix = self.get_projection_matrix()
 
     def rotate(self):
         """
@@ -54,7 +54,7 @@ class Camera:
         self.move()
         self.rotate()
         self.update_camera_vectors()
-        self.m_view = self.get_view_matrix()
+        self.view_matrix = self.get_view_matrix()
 
     def move(self):
         """

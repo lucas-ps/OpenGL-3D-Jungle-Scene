@@ -7,11 +7,23 @@ class Texture:
     Class that creates and manages Textures
     """
 
-    def __init__(self, ctx):
-        self.ctx = ctx
+    def __init__(self, app):
+        self.app = app
+        self.ctx = app.ctx
         self.textures = {0: self.get_texture(path='../textures/wooden_crate.png'),
                          1: self.get_texture(path='../textures/cat.jpg'),
-                         'skybox': self.get_texture_cube('../textures/skybox1/', 'jpg')}
+                         'skybox': self.get_texture_cube('../textures/skybox2/', 'png'),
+                         'depth_texture': self.get_depth_texture()}
+
+    def get_depth_texture(self):
+        """
+        Generates a depth texture used in shadow mapping
+        :return: The generated depth texture
+        """
+        dt = self.ctx.depth_texture(self.app.WIN_SIZE)
+        dt.repeat_x = False
+        dt.repeat_y = False
+        return dt
 
     def get_texture_cube(self, path, ext='png'):
         """
