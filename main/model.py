@@ -83,6 +83,7 @@ class ExtendedBaseModel(BaseModel):
         Runs when object is created, passes shadow, light intensity, texture, projection, view and model matrices.
         """
         self.shader['m_view_light'].write(self.app.light.view_matrix_light)
+        self.shader['u_resolution'].write(glm.vec2(self.app.WIN_SIZE))
 
         # Depth texture
         self.depth_texture = self.app.link.texture.textures['depth_texture']

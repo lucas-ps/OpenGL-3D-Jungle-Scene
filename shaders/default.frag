@@ -24,11 +24,26 @@ uniform Light light;
 uniform sampler2D u_texture_0;
 uniform vec3 camPos;
 uniform sampler2DShadow shadowMap;
+uniform vec2 u_resolution;
 
-// Function using openGL's textureProj to see if pixel is within shadow.
+// Functions to calculate and 'soften' shadows, calculates whether a pixel is included in a the shadow using openGL's
+// textureProj to see if pixel is within shadow.
+float lookup(float ox, float oy) {
+    vec2 pixelOffset = 1 / u_resolution;
+    return textureProj(shadowMap, shadowCoord + vec4(ox * pixelOffset.x * shadowCoord.w,
+                                                     oy * pixelOffset.y * shadowCoord.w, 0.0, 0.0));
+}
+
 float getShadow() {
-    float shadow = textureProj(shadowMap, shadowCoord);
-    return shadow;
+    float shadow;
+    float swidth = 1.0;
+    float endp = swidth * 1.5;
+    for (float y = -endp; y <= endp; y += swidth) {
+        for (float x = -endp; x <= endp; x += swidth) {
+            shadow += lookup(x, y);
+        }
+    }
+    return shadow / 16;
 }
 
 // Function to calculate lighting using Phong lighting. Also applies shadows.
