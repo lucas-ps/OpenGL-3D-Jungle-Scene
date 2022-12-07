@@ -32,6 +32,7 @@ class BaseVBO:
         self.vbo = self.get_vbo()
         self.format: str = None
         self.attrib: list = None
+        self.file = None
 
     def get_vbo(self):
         """
@@ -75,7 +76,7 @@ class CubeVBO(BaseVBO):
     def get_vertex_data(self):
         """
         Sets vertex co-ordinates for a triangle.
-        :return: Vertex data for a triangle.
+        :return: Vertex data for a cube.
         """
         vertices = [(-1, -1, 1), (1, -1, 1), (1, 1, 1), (-1, 1, 1), (-1, 1, -1), (-1, -1, -1), (1, -1, -1), (1, 1, -1)]
         indices = [(0, 2, 3), (0, 1, 2),
@@ -152,20 +153,24 @@ class SkyBoxVBO(BaseVBO):
 class ObjVBO(BaseVBO):
     def __init__(self, app, file):
         """
-        Initialises a cat VBO with parameters needed to parse the files.
+        Initialises a VBO from an obj file with parameters needed.
         :param app: Previously created graphical engine
         """
-        super().__init__(app)
+        self.ctx = app
         self.format = '2f 3f 3f'
         self.attribs = ['in_texcoord_0', 'in_normal', 'in_position']
         self.file = file
+        self.ctx = app
+        vertex_data = self.get_vertex_data()
+        vbo = self.ctx.buffer(vertex_data)
+        self.vbo = vbo
 
     def get_vertex_data(self):
         """
         Uses pywavefront to parse cat obj file for vertex data.
         :return: A numpy array of vertex data.
         """
-        objs = pywavefront.Wavefront("../models/ground/ground.obj", cache=True, parse=True)
+        objs = pywavefront.Wavefront(self.file, cache=True, parse=True)
         obj = objs.materials.popitem()[1]
         vertex_data = obj.vertices
         vertex_data = np.array(vertex_data, dtype='f4')

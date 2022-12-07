@@ -1,0 +1,13 @@
+# Blender 3.3.1 MTL File: 'scene.blend'
+# www.blender.org
+
+newmtl 12260_Bird_Toucan
+Ns 10.000005
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 1
+map_Kd 12260_Bird_Toucan_Diffuse.jpg
+map_Bump 12260_Bird_Toucan_Bump.jpg

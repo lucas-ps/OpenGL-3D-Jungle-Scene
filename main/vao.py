@@ -33,17 +33,24 @@ class VAO:
         vao = self.ctx.vertex_array(program, [(vbo.vbo, vbo.format, *vbo.attribs)], skip_errors=True)
         return vao
 
-    def add_vao(self, name):
+    def add_vao(self, name, shader='default'):
         """
         todo
         """
-        self.vaos[name] = self.get_vao(
-                program=self.shaders.programs['default'],
+        if shader == 'water':
+            self.vaos[name] = self.get_vao(
+                program=self.shaders.programs['water'],
                 vbo=self.vbo.vbos[name])
-        self.vaos["shadow_"+name] = self.get_vao(
-            program=self.shaders.programs['shadow'],
-            vbo=self.vbo.vbos[name])
-
+            self.vaos["shadow_"+name] = self.get_vao(
+                program=self.shaders.programs['shadow'],
+                vbo=self.vbo.vbos[name])
+        else:
+            self.vaos[name] = self.get_vao(
+                    program=self.shaders.programs['default'],
+                    vbo=self.vbo.vbos[name])
+            self.vaos["shadow_"+name] = self.get_vao(
+                program=self.shaders.programs['shadow'],
+                vbo=self.vbo.vbos[name])
     def destroy(self):
         """
         Calls destroy function for VBOs and Shaders

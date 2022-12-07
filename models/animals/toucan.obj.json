@@ -1,0 +1,15 @@
+{
+  "created_at": "2022-12-07T22:16:58.646935",
+  "version": "0.1",
+  "mtllibs": [
+    "toucan.mtl"
+  ],
+  "vertex_buffers": [
+    {
+      "material": "12260_Bird_Toucan",
+      "vertex_format": "T2F_N3F_V3F",
+      "byte_offset": 0,
+      "byte_length": 5231616
+    }
+  ]
+}

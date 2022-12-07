@@ -39,7 +39,9 @@ class GraphicsEngine:
         self.light = Light()
 
         # Ensuring fragments show in the correct order of depth and culls faces that don't need to be rendered.
+        self.ctx.clear(0.9, 0.9, 0.9)
         self.ctx.enable(flags=mgl.DEPTH_TEST | mgl.CULL_FACE)
+        self.ctx.blend_func = mgl.SRC_ALPHA, mgl.ONE_MINUS_SRC_ALPHA
 
         # Load and render the scene
         self.scene = Scene(self)

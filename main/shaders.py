@@ -7,7 +7,8 @@ class Shaders:
         self.ctx = ctx
         self.programs = {'default': self.get_shader('default'),
                          'skybox': self.get_shader('skybox'),
-                         'shadow': self.get_shader('shadow_map')}
+                         'shadow': self.get_shader('shadow_map'),
+                         'water': self.get_shader('water')}
 
     def get_shader(self, shader_name):
         """

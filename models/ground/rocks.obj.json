@@ -1,0 +1,15 @@
+{
+  "created_at": "2022-12-07T22:16:48.162508",
+  "version": "0.1",
+  "mtllibs": [
+    "rocks.mtl"
+  ],
+  "vertex_buffers": [
+    {
+      "material": "Material.005",
+      "vertex_format": "T2F_N3F_V3F",
+      "byte_offset": 0,
+      "byte_length": 129024
+    }
+  ]
+}

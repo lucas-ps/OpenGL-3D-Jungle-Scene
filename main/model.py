@@ -83,6 +83,7 @@ class ExtendedBaseModel(BaseModel):
         Runs when object is created, passes shadow, light intensity, texture, projection, view and model matrices.
         """
         self.shader['m_view_light'].write(self.app.light.view_matrix_light)
+
         self.shader['u_resolution'].write(glm.vec2(self.app.WIN_SIZE))
 
         # Depth texture
@@ -117,6 +118,7 @@ class ExtendedBaseModel(BaseModel):
 class Cube(ExtendedBaseModel):
     def __init__(self, app, vao_name='cube', texture_id=0, position=(0, 0, 0), rotation=(0, 0, 0), scale=(1, 1, 1)):
         super().__init__(app, vao_name, texture_id, position, rotation, scale)
+
 
 class SkyBox(BaseModel):
     def __init__(self, app, vao_name='skybox', texture_id='skybox', position=(0, 0, 0), rotation=(0, 0, 0),
@@ -157,3 +159,7 @@ class ObjModel(ExtendedBaseModel):
     def __init__(self, app, vao_name='ground', texture_id='ground', position=(0, 0, 0), rotation=(0, 0, 0),
                  scale=(1, 1, 1)):
         super().__init__(app, vao_name, texture_id, position, rotation, scale)
+
+    def update(self):
+        self.model_matrix = self.get_model_matrix()
+        super().update()
