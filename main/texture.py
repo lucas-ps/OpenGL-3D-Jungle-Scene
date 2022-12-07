@@ -13,7 +13,14 @@ class Texture:
         self.textures = {0: self.get_texture(path='../textures/wooden_crate.png'),
                          1: self.get_texture(path='../textures/cat.jpg'),
                          'skybox': self.get_texture_cube('../textures/skybox2/', 'png'),
-                         'depth_texture': self.get_depth_texture()}
+                         'depth_texture': self.get_depth_texture(),
+                         'ground': self.get_texture(path='../models/ground/forrest_ground_01_diff_4k.jpg')}
+
+    def add_texture(self, file, name):
+        """
+        todo
+        """
+        self.textures[name] = self.get_texture(path=file)
 
     def get_depth_texture(self):
         """

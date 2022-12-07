@@ -8,7 +8,10 @@ class VBO:
     """
 
     def __init__(self, ctx):
-        self.vbos = {'cube': CubeVBO(ctx), 'cat': CatVBO(ctx) , 'skybox': SkyBoxVBO(ctx)}
+        self.vbos = {'cube': CubeVBO(ctx), 'skybox': SkyBoxVBO(ctx)}
+
+    def add_vbo(self, vbo, name):
+        self.vbos[name] = vbo
 
     def destroy(self):
         """
@@ -105,27 +108,6 @@ class CubeVBO(BaseVBO):
 
         return vertex_data
 
-class CatVBO(BaseVBO):
-    def __init__(self, app):
-        """
-        Initialises a cat VBO with parameters needed to parse the files.
-        :param app: Previously created graphical engine
-        """
-        super().__init__(app)
-        self.format = '2f 3f 3f'
-        self.attribs = ['in_texcoord_0', 'in_normal', 'in_position']
-
-    def get_vertex_data(self):
-        """
-        Uses pywavefront to parse cat obj file for vertex data.
-        :return: A numpy array of vertex data.
-        """
-        objs = pywavefront.Wavefront("../models/20430_Cat_v1_NEW.obj", cache=True, parse=True)
-        obj = objs.materials.popitem()[1]
-        vertex_data = obj.vertices
-        vertex_data = np.array(vertex_data, dtype='f4')
-        return vertex_data
-
 class SkyBoxVBO(BaseVBO):
     """
     Extends BaseVBO for use to render basic the skybox
@@ -164,4 +146,27 @@ class SkyBoxVBO(BaseVBO):
         vertex_data = self.get_data(vertices, indices)
         vertex_data = np.flip(vertex_data, 1).copy(order='C')
 
+        return vertex_data
+
+
+class ObjVBO(BaseVBO):
+    def __init__(self, app, file):
+        """
+        Initialises a cat VBO with parameters needed to parse the files.
+        :param app: Previously created graphical engine
+        """
+        super().__init__(app)
+        self.format = '2f 3f 3f'
+        self.attribs = ['in_texcoord_0', 'in_normal', 'in_position']
+        self.file = file
+
+    def get_vertex_data(self):
+        """
+        Uses pywavefront to parse cat obj file for vertex data.
+        :return: A numpy array of vertex data.
+        """
+        objs = pywavefront.Wavefront("../models/ground/ground.obj", cache=True, parse=True)
+        obj = objs.materials.popitem()[1]
+        vertex_data = obj.vertices
+        vertex_data = np.array(vertex_data, dtype='f4')
         return vertex_data

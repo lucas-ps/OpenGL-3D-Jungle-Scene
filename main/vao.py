@@ -19,12 +19,6 @@ class VAO:
             'shadow_cube': self.get_vao(
                 program=self.shaders.programs['shadow'],
                 vbo=self.vbo.vbos['cube']),
-            'cat': self.get_vao(
-                program=self.shaders.programs['default'],
-                vbo=self.vbo.vbos['cat']),
-            'shadow_cat': self.get_vao(
-                program=self.shaders.programs['shadow'],
-                vbo=self.vbo.vbos['cat']),
             'skybox': self.get_vao(
                 program=self.shaders.programs['skybox'],
                 vbo=self.vbo.vbos['skybox'])
@@ -38,6 +32,17 @@ class VAO:
         """
         vao = self.ctx.vertex_array(program, [(vbo.vbo, vbo.format, *vbo.attribs)], skip_errors=True)
         return vao
+
+    def add_vao(self, name):
+        """
+        todo
+        """
+        self.vaos[name] = self.get_vao(
+                program=self.shaders.programs['default'],
+                vbo=self.vbo.vbos[name])
+        self.vaos["shadow_"+name] = self.get_vao(
+            program=self.shaders.programs['shadow'],
+            vbo=self.vbo.vbos[name])
 
     def destroy(self):
         """

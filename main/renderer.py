@@ -24,7 +24,6 @@ class Renderer:
         """
         self.app.ctx.screen.use()
         self.render_shadow()
-        self.scene.update()
         self.app.ctx.screen.use()
         for obj in self.scene.objects:
             obj.render()

@@ -118,12 +118,6 @@ class Cube(ExtendedBaseModel):
     def __init__(self, app, vao_name='cube', texture_id=0, position=(0, 0, 0), rotation=(0, 0, 0), scale=(1, 1, 1)):
         super().__init__(app, vao_name, texture_id, position, rotation, scale)
 
-
-class Cat(ExtendedBaseModel):
-    def __init__(self, app, vao_name='cat', texture_id=1, position=(0, 0, 0), rotation=(-90, 0, 0), scale=(1, 1, 1)):
-        super().__init__(app, vao_name, texture_id, position, rotation, scale)
-
-
 class SkyBox(BaseModel):
     def __init__(self, app, vao_name='skybox', texture_id='skybox', position=(0, 0, 0), rotation=(0, 0, 0),
                  scale=(1, 1, 1)):
@@ -157,3 +151,9 @@ class MovingCube(Cube):
     def update(self):
         self.model_matrix = self.get_model_matrix()
         super().update()
+
+
+class ObjModel(ExtendedBaseModel):
+    def __init__(self, app, vao_name='ground', texture_id='ground', position=(0, 0, 0), rotation=(0, 0, 0),
+                 scale=(1, 1, 1)):
+        super().__init__(app, vao_name, texture_id, position, rotation, scale)
