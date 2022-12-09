@@ -1,5 +1,5 @@
 """
-Main class for setting up the graphics engine and updating matrices
+Main class for setting up the graphics engine and calling render methods.
 """
 
 import moderngl as mgl
@@ -16,6 +16,9 @@ import pygame as pg
 
 class GraphicsEngine:
     def __init__(self, win_size=(1600, 900)):
+        """
+        Initiated the graphics engine with a pygame instance and all the parameters required to render the scene.
+        """
         # Initiate pygame modules
         pg.init()
 
@@ -53,6 +56,9 @@ class GraphicsEngine:
         self.scene_renderer = Renderer(self)
 
     def check_events(self):
+        """
+        Checks if the program needs to quit.
+        """
         for event in pg.event.get():
             if event.type == pg.QUIT or (event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE):
                 self.link.destroy()
@@ -61,6 +67,9 @@ class GraphicsEngine:
                 sys.exit()
 
     def render(self):
+        """
+        Method for re rendering the scene - called in "run" 60x per second.
+        """
         # Clear framebuffer
         self.ctx.clear(color=(0.08, 0.16, 0.18))
 
@@ -77,6 +86,9 @@ class GraphicsEngine:
         self.time = pg.time.get_ticks() * 0.001
 
     def run(self):
+        """
+        The run loop which calls methods to re-render the scene 60x per second.
+        """
         while True:
             self.get_time()
             self.check_events()

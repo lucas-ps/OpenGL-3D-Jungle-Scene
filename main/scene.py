@@ -1,5 +1,5 @@
 """
-Implements ther actual scene, add objects here.
+Implements the actual scene, add objects here.
 """
 
 from model import *
@@ -11,7 +11,6 @@ class Scene:
     """
     A class which stores and manages objects in a scene
     """
-
     def __init__(self, app):
         self.app = app
         self.objects = []
@@ -20,7 +19,7 @@ class Scene:
 
     def add_object(self, name, obj_file, texture_file, rotation=(0, 0, 0), position=(0, 0, 0), water=False):
         """
-        todo
+        Calls relevant methods to insert an object into tee scene (texture, vao, vbo, model methods)
         """
         self.app.link.texture.add_texture(texture_file, name)
         self.app.link.vao.vbo.add_vbo(ObjVBO(self.app.ctx, file=obj_file), name)
@@ -58,4 +57,7 @@ class Scene:
                         water=True)
 
     def update(self):
+        """
+        Rotates the water
+        """
         self.water.rot.y = self.app.time

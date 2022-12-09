@@ -29,7 +29,7 @@ class VAO:
 
     def add_vao(self, name, shader='default'):
         """
-        todo
+        Creates VAOs (and their corresponding shadow VAOs) and adds them to the dictionary.
         """
         if shader == 'water':
             self.vaos[name] = self.get_vao(

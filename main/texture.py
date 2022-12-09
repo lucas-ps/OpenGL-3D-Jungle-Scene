@@ -8,7 +8,7 @@ import moderngl as mgl
 
 class Texture:
     """
-    Class that creates and manages Textures
+    Class that creates and manages Textures.
     """
 
     def __init__(self, app):
@@ -20,14 +20,14 @@ class Texture:
 
     def add_texture(self, file, name):
         """
-        todo documentation
+        Adds texture objects to the textures array.
         """
         self.textures[name] = self.get_texture(path=file)
 
     def get_depth_texture(self):
         """
-        Generates a depth texture used in shadow mapping using moderngl
-        :return: The generated depth texture
+        Generates a depth texture used in shadow mapping using moderngl.
+        :return: The generated depth texture.
         """
         dt = self.ctx.depth_texture(self.app.WIN_SIZE)
         dt.repeat_x = False
@@ -77,7 +77,7 @@ class Texture:
 
     def destroy(self):
         """
-        Acts as a garbage collector for textures
+        Acts as a garbage collector for textures.
         """
         for texture in self.textures.values():
             texture.release
