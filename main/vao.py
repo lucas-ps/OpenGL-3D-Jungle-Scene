@@ -1,24 +1,18 @@
+"""
+Class for Vertex Array Objects (VAO) - object containing one or more Vertex Buffer Objects and is designed to store
+the information for a complete rendered object. The VAO dictionary is initialised with a cube VAO.
+"""
+
 from vbo import VBO
 from shaders import Shaders
 
 
 class VAO:
-    """
-    Class for Vertex Array Objects (VAO) - object containing one or more Vertex Buffer Objects and is designed to store
-    the information for a complete rendered object. The VAO dictionary is initialised with a cube VAO.
-    """
-
     def __init__(self, ctx):
         self.ctx = ctx
         self.vbo = VBO(ctx)
         self.shaders = Shaders(ctx)
         self.vaos = {
-            'cube': self.get_vao(
-                program=self.shaders.programs['default'],
-                vbo=self.vbo.vbos['cube']),
-            'shadow_cube': self.get_vao(
-                program=self.shaders.programs['shadow'],
-                vbo=self.vbo.vbos['cube']),
             'skybox': self.get_vao(
                 program=self.shaders.programs['skybox'],
                 vbo=self.vbo.vbos['skybox'])

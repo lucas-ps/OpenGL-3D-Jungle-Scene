@@ -1,3 +1,7 @@
+"""
+Class for loading textures
+"""
+
 import pygame as pg
 import moderngl as mgl
 
@@ -16,13 +20,13 @@ class Texture:
 
     def add_texture(self, file, name):
         """
-        todo
+        todo documentation
         """
         self.textures[name] = self.get_texture(path=file)
 
     def get_depth_texture(self):
         """
-        Generates a depth texture used in shadow mapping
+        Generates a depth texture used in shadow mapping using moderngl
         :return: The generated depth texture
         """
         dt = self.ctx.depth_texture(self.app.WIN_SIZE)

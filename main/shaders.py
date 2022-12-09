@@ -1,3 +1,7 @@
+"""
+Class that loads shader files
+"""
+
 class Shaders:
     def __init__(self, ctx):
         """

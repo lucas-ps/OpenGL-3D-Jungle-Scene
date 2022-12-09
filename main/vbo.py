@@ -1,14 +1,14 @@
+"""
+Class that holds VBOs for objects
+"""
+
 import numpy as np
 import pywavefront
 
 
 class VBO:
-    """
-    Class that holds a dictionary of VBOs, initialised with a CubeVBO
-    """
-
     def __init__(self, ctx):
-        self.vbos = {'cube': CubeVBO(ctx), 'skybox': SkyBoxVBO(ctx)}
+        self.vbos = {'skybox': SkyBoxVBO(ctx)}
 
     def add_vbo(self, vbo, name):
         self.vbos[name] = vbo
@@ -48,66 +48,6 @@ class BaseVBO:
         Acts as a garbage collector for VBOs
         """
         self.vbo.release()
-
-
-class CubeVBO(BaseVBO):
-    """
-    Extends BaseVBO for use to render basic cubes
-    :param ctx: An interactive 2D vector graphics protocol, previously created for the in GraphicsEngine
-    """
-    def __init__(self, ctx):
-        super().__init__(ctx)
-        self.format = '2f 3f 3f'
-        self.attribs = ['in_texcoord_0', 'in_normal', 'in_position']
-
-    @staticmethod
-    def get_data(vertices, indices):
-        """
-        Static method to create an array for generating vertex data above.
-        :param vertices: The array of vertices.
-        :param indices: The array of indices.
-        :return: A numpy array  of vertices and their indices.
-        """
-        data = [vertices[ind]
-                for triangle in indices
-                for ind in triangle]
-        return np.array(data, dtype='f4')
-
-    def get_vertex_data(self):
-        """
-        Sets vertex co-ordinates for a triangle.
-        :return: Vertex data for a cube.
-        """
-        vertices = [(-1, -1, 1), (1, -1, 1), (1, 1, 1), (-1, 1, 1), (-1, 1, -1), (-1, -1, -1), (1, -1, -1), (1, 1, -1)]
-        indices = [(0, 2, 3), (0, 1, 2),
-                   (1, 7, 2), (1, 6, 7),
-                   (6, 5, 4), (4, 7, 6),
-                   (3, 4, 5), (3, 5, 0),
-                   (3, 7, 4), (3, 2, 7),
-                   (0, 6, 1), (0, 5, 6)]
-        vertex_data = self.get_data(vertices, indices)
-
-        texture_coord = [(0, 0), (1, 0), (1, 1), (0, 1)]
-        texture_coord_indices = [(0, 2, 3), (0, 1, 2),
-                                 (0, 2, 3), (0, 1, 2),
-                                 (0, 1, 2), (2, 3, 0),
-                                 (2, 3, 0), (2, 0, 1),
-                                 (0, 2, 3), (0, 1, 2),
-                                 (3, 1, 2), (3, 0, 1)]
-        texture_coord_data = self.get_data(texture_coord, texture_coord_indices)
-
-        normals = [(0, 0, 1) * 6,
-                   (1, 0, 0) * 6,
-                   (0, 0, -1) * 6,
-                   (-1, 0, 0) * 6,
-                   (0, 1, 0) * 6,
-                   (0, -1, 0) * 6]
-        normals = np.array(normals, dtype='f4').reshape(36, 3)
-
-        vertex_data = np.hstack([normals, vertex_data])
-        vertex_data = np.hstack([texture_coord_data, vertex_data])
-
-        return vertex_data
 
 class SkyBoxVBO(BaseVBO):
     """

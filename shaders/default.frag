@@ -72,6 +72,7 @@ vec3 getLight(vec3 colour) {
 // Reading and rendering fragments.
 void main() {
     // Basic colour
+    // uv_0 = rasterised texture coords, u_texture_0 = the tecture picture
     vec3 colour = texture(u_texture_0, uv_0).rgb;
 
     // Gamma correction

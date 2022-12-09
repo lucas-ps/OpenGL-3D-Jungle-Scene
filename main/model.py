@@ -1,6 +1,8 @@
-import numpy as np
+"""
+Models class for base classs that can be used to build objects
+"""
+
 import glm
-import pygame as pg
 
 
 class BaseModel:
@@ -115,11 +117,6 @@ class ExtendedBaseModel(BaseModel):
         self.shader['m_model'].write(self.model_matrix)
 
 
-class Cube(ExtendedBaseModel):
-    def __init__(self, app, vao_name='cube', texture_id=0, position=(0, 0, 0), rotation=(0, 0, 0), scale=(1, 1, 1)):
-        super().__init__(app, vao_name, texture_id, position, rotation, scale)
-
-
 class SkyBox(BaseModel):
     def __init__(self, app, vao_name='skybox', texture_id='skybox', position=(0, 0, 0), rotation=(0, 0, 0),
                  scale=(1, 1, 1)):
@@ -144,15 +141,6 @@ class SkyBox(BaseModel):
         # Matrices
         self.shader['m_proj'].write(self.app.camera.projection_matrix)
         self.shader['m_view'].write(glm.mat4(glm.mat3(self.app.camera.view_matrix)))
-
-
-class MovingCube(Cube):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-    def update(self):
-        self.model_matrix = self.get_model_matrix()
-        super().update()
 
 
 class ObjModel(ExtendedBaseModel):

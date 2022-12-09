@@ -1,3 +1,7 @@
+"""
+Main class for setting up the graphics engine and updating matrices
+"""
+
 import moderngl as mgl
 import sys
 
@@ -7,6 +11,7 @@ from model import *
 from camera import Camera
 from light import Light
 from link import Link
+import pygame as pg
 
 
 class GraphicsEngine:

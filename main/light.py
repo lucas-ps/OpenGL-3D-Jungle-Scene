@@ -1,5 +1,5 @@
 """
-Class for implementing Phong lighting
+Class that sets necessary parameters for Phong lighting
 """
 
 import glm

@@ -1,3 +1,7 @@
+"""
+Implements ther actual scene, add objects here.
+"""
+
 from model import *
 from vbo import *
 import moderngl as mgl
@@ -14,7 +18,7 @@ class Scene:
         self.load()
         self.skybox = SkyBox(app)
 
-    def add_object(self, name, obj_file, texture_file, rotation=(0, 0, 0), water=False):
+    def add_object(self, name, obj_file, texture_file, rotation=(0, 0, 0), position=(0, 0, 0), water=False):
         """
         todo
         """
@@ -27,7 +31,7 @@ class Scene:
             self.water = model
         else:
             self.app.link.vao.add_vao(name)
-            model = ObjModel(app=self.app, vao_name=name, texture_id=name, rotation=rotation)
+            model = ObjModel(app=self.app, vao_name=name, texture_id=name, rotation=rotation, position=position)
         self.objects.append(model)
 
     def load(self):
@@ -43,7 +47,8 @@ class Scene:
         self.add_object(name="leaves1", obj_file='../models/trees/leaves1.obj', texture_file='../textures/leaves.jpg')
         self.add_object(name="leaves2", obj_file='../models/trees/leaves2.obj', texture_file='../textures/leaves.jpg')
 
-        self.add_object(name="fish", obj_file='../models/animals/fish.obj', texture_file='../textures/fish.jpg')
+        self.add_object(name="fish", obj_file='../models/animals/fish.obj', texture_file='../textures/fish.jpg',
+            rotation=(180, 0, 0), position=(0, -2.3, 0))
         self.add_object(name="monkey", obj_file='../models/animals/monkey.obj', texture_file='../textures/monkey.jpg')
         self.add_object(name="toucan", obj_file='../models/animals/toucan.obj', texture_file='../textures/toucan.jpg')
         self.add_object(name="frog", obj_file='../models/animals/frog.obj', texture_file='../textures/frog.jpg')

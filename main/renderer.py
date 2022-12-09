@@ -1,3 +1,7 @@
+"""
+Class that renders the scene and it's shadows
+"""
+
 class Renderer:
     def __init__(self, app):
         self.app = app

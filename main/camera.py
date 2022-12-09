@@ -1,3 +1,7 @@
+"""
+Camera class that performs transformations and translations as user moves through the scene
+"""
+
 import glm
 import pygame as pg
 
