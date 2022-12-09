@@ -1,5 +1,5 @@
 
-# PyGame/OpenGL 3d Jungle Scene
+# PyGame/OpenGL 3D Jungle Scene
 
 A basic jungle scene implemented in python using PyGame, modernGL and GLSL shaders. A video demo can be found here: https://youtu.be/qRt4sf1BtU8
 
